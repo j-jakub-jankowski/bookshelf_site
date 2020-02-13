@@ -1,0 +1,106 @@
+{% extends 'book_management/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <form method="POST" class="post-form">
+            <div class="well">
+                <div class="row">
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ form.q.label_tag }}
+                        {% render_field form.q class="form-control" %}
+                    </div>
+                </div>
+                <h4 style="margin-top: 0">Filter</h4>
+                <div class="row">
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ form.intitle.label_tag }}
+                        {% render_field form.intitle class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ form.inauthor.label_tag }}
+                        {% render_field form.inauthor class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ form.inpublisher.label_tag }}
+                        {% render_field form.inpublisher class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ form.subject.label_tag }}
+                        {% render_field form.subject class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ form.isbn.label_tag }}
+                        {% render_field form.isbn class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ form.lccn.label_tag }}
+                        {% render_field form.lccn class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ form.oclc.label_tag }}
+                        {% render_field form.oclc class="form-control" %}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm btn-block">
+                    Search
+                </button>
+                <a href="{% url 'import_all' %}" class="btn btn-primary btn-sm btn-block">
+                    Import all below
+                </a>
+                {% csrf_token %}
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if search_result %}
+
+<table class="table table-bordered">{% csrf_token %}
+    <thead>
+    <tr>
+        <th>Cover</th>
+        <th>Title</th>
+        <th>Authors</th>
+        <th>Publication date</th>
+        <th>ISBN</th>
+        <th>Page count</th>
+        <th>Language</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for book in search_result %}
+    <tr>
+        <td>
+            {% if book.volumeInfo.imageLinks.smallThumbnail %}
+            <img src={{ book.volumeInfo.imageLinks.smallThumbnail }} class="rounded mx-auto d-block"
+                 alt="Responsive image">
+            {% else %}
+            No Image
+            {% endif %}
+
+        </td>
+        <td>{{ book.volumeInfo.title }}</td>
+        <td>{{ book.volumeInfo.authors }}</td>
+        <td>{{ book.volumeInfo.publishedDate }}</td>
+        <td>{{ book.volumeInfo.industryIdentifiers.0.identifier }}</td>
+        <td>{{ book.volumeInfo.pageCount }}</td>
+        <td>{{ book.volumeInfo.language }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<table class="table table-bordered">{% csrf_token %}
+    <thead>
+    <tr>
+        <th>No data</th>
+    </tr>
+    </thead>
+</table>
+{% endif %}
+
+
+{% endblock %}

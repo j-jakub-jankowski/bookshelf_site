@@ -1,0 +1,70 @@
+{% extends 'book_management/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <form method="get">
+            <div class="well">
+                <div class="row">
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.title.label_tag }}
+                        {% render_field filter.form.title class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.authors.label_tag }}
+                        {% render_field filter.form.authors class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.language.label_tag }}
+                        {% render_field filter.form.language class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.published__gt.label_tag }}
+                        {% render_field filter.form.published__gt class="form-control" %}
+                    </div>
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.published__lt.label_tag }}
+                        {% render_field filter.form.published__lt class="form-control" %}
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm btn-block">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Cover</th>
+        <th>Title</th>
+        <th>Authors</th>
+        <th>Publication date</th>
+        <th>ISBN</th>
+        <th>Page count</th>
+        <th>Language</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for book in filter.qs %}
+    <tr>
+        <td><img src={{ book.small_thumbnail }} class="rounded mx-auto d-block" alt="Responsive image"></td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.authors }}</td>
+        <td>{{ book.published_date }}</td>
+        <td>{{ book.isbn }}</td>
+        <td>{{ book.page_count }}</td>
+        <td>{{ book.language }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">No data</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
